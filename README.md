@@ -6,7 +6,7 @@
 - マイナス対応
 - キーボード入力対応
 
-##　開発
+## 開発
 Node.js環境下
 ```
 $ npm install --save styled-components
