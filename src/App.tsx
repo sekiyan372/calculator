@@ -2,13 +2,14 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 
 const App: React.FC = () => {
-  const [view, setView] = useState<string>('0')
+  const [view, setView] = useState<string>('')
   const [result, setResult] = useState<string>('')
-  const [existDot, setExistDot] = useState<string>()
+  const [existDot, setExistDot] = useState<boolean>(false)
 
   const addNumber= (num: string) => {
     if(result === '') {
-      view === '0' ? setView(num) : setView(view + num)
+      setView(view + num)
+      setResult('')
     } else if(view.slice(-1) === ' ') {
       setView(view + num)
     } else {
@@ -18,43 +19,53 @@ const App: React.FC = () => {
   }
   
   const addOperator = (operator: string) => {
-    if(view.slice(-1) !== ' ' && view !== '0') {
-      setExistDot()
+    if(view.slice(-1) !== ' ' && view !== '') {
       setView(view + ' ' + operator + ' ')
+      setResult('')
+      setExistDot(false)
     } else if (view.slice(-1) === ' ') {
       setView(view.slice(0, -3) + ' ' + operator + ' ')
+      setResult('')
+      setExistDot(false)
     }
   }
 
   const addMinus = () => {
-    if(view.slice(-1) === ' ' || view === '0') {
+    if(view === '') {
       setView('-')
+      setResult('')
+      setExistDot(false)
+    } else if(view.slice(-1) === ' ') {
+      setView(view + '-')
     } else if(view.slice(-1) !== '-' && view.slice(-1) !== '.') {
-      setExistDot()
       setView(view + ' - ')
+      setExistDot(false)
     }
   }
 
   const addDot = () => {
-    if (view.slice(-1) !== ' ' && !existDot && !result) {
+    if (view.slice(-1) !== ' ' && !existDot) {
       setView(view + '.')
-      setExistDot('.')
-    } else if (result) {
+      setExistDot(true)
+    } else if (result !== '') {
       clear()
-      setView('0.')
+      setView('.')
+      setExistDot(true)
     }
   }
   
   const calculate = () => {
-    if(view.slice(-1) !== ' ') {
+    if(view.slice(-1) !== ' ' && view.slice(-1) !== '-') {
       setView(eval(view) + '')
       setResult(view)
+      view.includes('.') ? setExistDot(true) : setExistDot(false)
     }
   }
 
   const clear = () => {
-    setView('0')
+    setView('')
     setResult('')
+    setExistDot(false)
   }
 
   const clearEntry = () => {
